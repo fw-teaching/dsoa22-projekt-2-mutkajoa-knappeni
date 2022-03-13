@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -98,8 +97,25 @@ public class Utils {
        map.add(firstCharMap);
         return map;
     }
+    /* konstig megaforloop
+    static HashMap<String,HashMap<String, HashMap<String,Float>>> getDifference(ArrayList<HashMap<String, HashMap<String,Float>>> trainedData, ArrayList<HashMap<String, HashMap<String,Float>>> inputtedData){
+        HashMap<String,HashMap<String, HashMap<String,Float>>> list = new HashMap<String,HashMap<String, HashMap<String,Float>>>();
+        for (LangLabel label : LangLabel.values()) {
+            
+            for (HashMap<String,HashMap<String,Float>> inputtedDataHashMap : inputtedData) {
+                    for (HashMap<String,Float> hashMap : inputtedDataHashMap.values()) {
+                        for (String charsString : hashMap.keySet()) {
+                            
+                        }
+                    }
+            }
+        }
 
-    
+
+        return list;
+    }
+    */
+
     
 
 }
