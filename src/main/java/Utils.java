@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class Utils {
 
@@ -97,24 +98,29 @@ public class Utils {
        map.add(firstCharMap);
         return map;
     }
-    /* konstig megaforloop
-    static HashMap<String,HashMap<String, HashMap<String,Float>>> getDifference(ArrayList<HashMap<String, HashMap<String,Float>>> trainedData, ArrayList<HashMap<String, HashMap<String,Float>>> inputtedData){
+   
+    static HashMap<String,HashMap<String, HashMap<String,Float>>> getScore(ArrayList<HashMap<String, HashMap<String,Float>>> trainedData, ArrayList<HashMap<String, HashMap<String,Float>>> inputtedData){
         HashMap<String,HashMap<String, HashMap<String,Float>>> list = new HashMap<String,HashMap<String, HashMap<String,Float>>>();
-        for (LangLabel label : LangLabel.values()) {
+     
             
-            for (HashMap<String,HashMap<String,Float>> inputtedDataHashMap : inputtedData) {
-                    for (HashMap<String,Float> hashMap : inputtedDataHashMap.values()) {
-                        for (String charsString : hashMap.keySet()) {
-                            
+            for (var firstNestedHashMap : inputtedData) {
+                    for (var secondNestedHashMap : firstNestedHashMap.entrySet()) {
+                        for (var charValue : secondNestedHashMap.getValue().entrySet()) {
+                          var murr =  trainedData.get(inputtedData.indexOf(firstNestedHashMap));
+                          var purr = murr.get(secondNestedHashMap.getKey());
+                          var surr = purr.get(charValue.getKey());
+                            if(surr!=null){
+                                System.out.println(surr+charValue.getValue());
+                            }
                         }
                     }
             }
-        }
+        
 
 
         return list;
     }
-    */
+    
 
     
 

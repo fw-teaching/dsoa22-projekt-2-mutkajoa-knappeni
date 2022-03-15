@@ -4,7 +4,8 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		System.out.println(Utils.train());
+		System.out.println(Utils.getScore(Utils.train(), Utils.train()));
+		/*
 		Scanner scanner = new Scanner(System.in);
 
 		String deString = FileHandler.readTextFile("assets/lang-samples/de.txt");
