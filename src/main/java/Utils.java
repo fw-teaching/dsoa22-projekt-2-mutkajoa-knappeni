@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import javax.swing.InputMap;
+
 public class Utils {
 
     static String cleanString(String input){
@@ -83,7 +85,7 @@ public class Utils {
         return map;
     }
 
-    static ArrayList<HashMap<String, HashMap<String,Float>>> train(){
+    static ArrayList<HashMap<String, HashMap<String,Float>>> getTrainData(){
        ArrayList<HashMap<String, HashMap<String,Float>>>map = new ArrayList<HashMap<String, HashMap<String,Float>>>();
        HashMap<String, HashMap<String,Float>>oneCharMap = new HashMap<String, HashMap<String,Float>>();
        HashMap<String, HashMap<String,Float>>threeCharMap = new HashMap<String, HashMap<String,Float>>();
@@ -98,19 +100,46 @@ public class Utils {
        map.add(firstCharMap);
         return map;
     }
-   
-    static HashMap<String,HashMap<String, HashMap<String,Float>>> getScore(ArrayList<HashMap<String, HashMap<String,Float>>> trainedData, ArrayList<HashMap<String, HashMap<String,Float>>> inputtedData){
-        HashMap<String,HashMap<String, HashMap<String,Float>>> list = new HashMap<String,HashMap<String, HashMap<String,Float>>>();
-     
+    static HashMap<String,HashMap<String,Float>> getInputData(String input){
+        HashMap<String,HashMap<String,Float>>map = new HashMap<String,HashMap<String,Float>>();
             
-            for (var firstNestedHashMap : inputtedData) {
+       
+       map.put("onechar", getPrecentage(getCharFrequency(input)));
+       map.put("threechar", getPrecentage(getThreeCharFrequency(input)));
+       map.put("firstchar", getPrecentage(getFirstCharFrequency(input)));
+       return map;
+    }
+   
+    static HashMap<String,HashMap<String, HashMap<String,Float>>> getScore(ArrayList<HashMap<String, HashMap<String,Float>>> trainedData, HashMap<String, HashMap<String,Float>> inputtedData){
+        HashMap<String,HashMap<String, HashMap<String,Float>>> list = new HashMap<String,HashMap<String, HashMap<String,Float>>>();
+        String[] labelStrings = {"onechar","threechar","firstchar"};
+            
+            for (var firstNestedHashMap : trainedData) {
                     for (var secondNestedHashMap : firstNestedHashMap.entrySet()) {
                         for (var charValue : secondNestedHashMap.getValue().entrySet()) {
-                          var murr =  trainedData.get(inputtedData.indexOf(firstNestedHashMap));
-                          var purr = murr.get(secondNestedHashMap.getKey());
-                          var surr = purr.get(charValue.getKey());
+                          var murr =  inputtedData.get(labelStrings[trainedData.indexOf(firstNestedHashMap)]);
+                          var surr = murr.get(charValue.getKey());
                             if(surr!=null){
-                                System.out.println(surr+charValue.getValue());
+                                //bygga upp resultatet "list"
+                               if(list.containsKey(secondNestedHashMap.getKey())){
+                                   var kurr = list.get(secondNestedHashMap.getKey());
+                                   var hurr = kurr.get(labelStrings[trainedData.indexOf(firstNestedHashMap)]);
+                                   if(hurr != null){
+                                        hurr.put(charValue.getKey(), surr+charValue.getValue());
+                                   }else{
+                                       var turr = new HashMap<String,Float>();
+                                       turr.put(charValue.getKey(), surr+charValue.getValue());
+                                       kurr.put(labelStrings[trainedData.indexOf(firstNestedHashMap)], turr);
+                                   }
+                               }else{
+                                    HashMap<String,HashMap<String,Float>> lurr = new HashMap<String,HashMap<String,Float>>();
+                                    HashMap<String,Float> jurr = new HashMap<String,Float>();
+                                    jurr.put(charValue.getKey(), surr+charValue.getValue());
+                                    lurr.put(labelStrings[trainedData.indexOf(firstNestedHashMap)], jurr);
+                                    list.put(secondNestedHashMap.getKey(), lurr);
+                               }
+                                
+                              
                             }
                         }
                     }

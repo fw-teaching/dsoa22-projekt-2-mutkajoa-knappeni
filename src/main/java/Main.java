@@ -3,8 +3,8 @@ import java.util.Scanner;
 public class Main {
 
 	public static void main(String[] args) {
-
-		System.out.println(Utils.getScore(Utils.train(), Utils.train()));
+		
+		System.out.println(Utils.getScore(Utils.getTrainData(), Utils.getInputData("Kalle skäller 1122 jag tycker om ost och öl")));
 		/*
 		Scanner scanner = new Scanner(System.in);
 
