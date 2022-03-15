@@ -102,52 +102,78 @@ public class Utils {
     }
     static HashMap<String,HashMap<String,Float>> getInputData(String input){
         HashMap<String,HashMap<String,Float>>map = new HashMap<String,HashMap<String,Float>>();
-            
-       
-       map.put("onechar", getPrecentage(getCharFrequency(input)));
-       map.put("threechar", getPrecentage(getThreeCharFrequency(input)));
-       map.put("firstchar", getPrecentage(getFirstCharFrequency(input)));
+        map.put("onechar", getPrecentage(getCharFrequency(input)));
+        map.put("threechar", getPrecentage(getThreeCharFrequency(input)));
+        map.put("firstchar", getPrecentage(getFirstCharFrequency(input)));
        return map;
     }
    
-    static HashMap<String,HashMap<String, HashMap<String,Float>>> getScore(ArrayList<HashMap<String, HashMap<String,Float>>> trainedData, HashMap<String, HashMap<String,Float>> inputtedData){
+
+    /*vår getScore() funktion hittar de bokstäver eller kombination av boksäver som finns i båda datasetten
+    * destu flera bokstäver som finns i båda, och med större frekvens, destu högre "score" får språket 
+    * när vi plussar ihop frekvenserna
+    */
+    static HashMap<String,HashMap<String, Float>> getScore(ArrayList<HashMap<String, HashMap<String,Float>>> trainedData, HashMap<String, HashMap<String,Float>> inputtedData){
         HashMap<String,HashMap<String, HashMap<String,Float>>> list = new HashMap<String,HashMap<String, HashMap<String,Float>>>();
+        HashMap<String,HashMap<String, Float>>result = new HashMap<String,HashMap<String, Float>>();
         String[] labelStrings = {"onechar","threechar","firstchar"};
-            
-            for (var firstNestedHashMap : trainedData) {
-                    for (var secondNestedHashMap : firstNestedHashMap.entrySet()) {
-                        for (var charValue : secondNestedHashMap.getValue().entrySet()) {
-                          var murr =  inputtedData.get(labelStrings[trainedData.indexOf(firstNestedHashMap)]);
-                          var surr = murr.get(charValue.getKey());
-                            if(surr!=null){
-                                //bygga upp resultatet "list"
-                               if(list.containsKey(secondNestedHashMap.getKey())){
-                                   var kurr = list.get(secondNestedHashMap.getKey());
-                                   var hurr = kurr.get(labelStrings[trainedData.indexOf(firstNestedHashMap)]);
-                                   if(hurr != null){
-                                        hurr.put(charValue.getKey(), surr+charValue.getValue());
-                                   }else{
-                                       var turr = new HashMap<String,Float>();
-                                       turr.put(charValue.getKey(), surr+charValue.getValue());
-                                       kurr.put(labelStrings[trainedData.indexOf(firstNestedHashMap)], turr);
-                                   }
-                               }else{
-                                    HashMap<String,HashMap<String,Float>> lurr = new HashMap<String,HashMap<String,Float>>();
-                                    HashMap<String,Float> jurr = new HashMap<String,Float>();
-                                    jurr.put(charValue.getKey(), surr+charValue.getValue());
-                                    lurr.put(labelStrings[trainedData.indexOf(firstNestedHashMap)], jurr);
-                                    list.put(secondNestedHashMap.getKey(), lurr);
-                               }
-                                
-                              
+        //här itererar vi över både trainedData och inputtedData samtidigt
+        for (HashMap<String,HashMap<String,Float>> firstNestedHashMap : trainedData) {
+                for (Entry<String, HashMap<String,Float>> secondNestedHashMap : firstNestedHashMap.entrySet()) {
+                    for (Entry<String,Float> charValue : secondNestedHashMap.getValue().entrySet()) {
+                        HashMap<String,Float> murr =  inputtedData.get(labelStrings[trainedData.indexOf(firstNestedHashMap)]);
+                        ////ta data från jämför bokstäverna, eller sekvenser av tre bokstäver, som finns i båda datasetten
+                        Float surr = murr.get(charValue.getKey());
+                        if(surr!=null){
+                            //bygga upp resultatet "list"
+                            if(list.containsKey(secondNestedHashMap.getKey())){
+                                HashMap<String,HashMap<String,Float>> kurr = list.get(secondNestedHashMap.getKey());
+                                HashMap<String,Float> hurr = kurr.get(labelStrings[trainedData.indexOf(firstNestedHashMap)]);
+                                if(hurr != null){
+                                    hurr.put(charValue.getKey(), surr+charValue.getValue());
+                            }else{
+                                HashMap<String,Float> turr = new HashMap<String,Float>();
+                                turr.put(charValue.getKey(), surr+charValue.getValue());
+                                kurr.put(labelStrings[trainedData.indexOf(firstNestedHashMap)], turr);
                             }
-                        }
+                        }else{
+                            HashMap<String,HashMap<String,Float>> lurr = new HashMap<String,HashMap<String,Float>>();
+                            HashMap<String,Float> jurr = new HashMap<String,Float>();
+                            jurr.put(charValue.getKey(), surr+charValue.getValue());
+                            lurr.put(labelStrings[trainedData.indexOf(firstNestedHashMap)], jurr);
+                            list.put(secondNestedHashMap.getKey(), lurr);
+                        }            
                     }
+                }
             }
-        
-
-
-        return list;
+        }
+        //Räkna ut resultatet och sortera enligt högsta score till lägsta
+        for (Entry<String,HashMap<String,HashMap<String,Float>>> langElement : list.entrySet()) {
+            for (Entry<String,HashMap<String,Float>> charSequenceElement : langElement.getValue().entrySet()) {
+                for (Entry<String,Float> valueElements : charSequenceElement.getValue().entrySet()) {
+                    if(result.containsKey(langElement.getKey())){
+                        HashMap<String,Float> resultCharSeqMap = result.get(langElement.getKey());
+                        Float resultFloat = valueElements.getValue();
+                        if(resultCharSeqMap.containsKey(charSequenceElement.getKey())){
+                            float temp[] = {0};
+                            Float f = resultCharSeqMap.get(charSequenceElement.getKey());
+                                temp[0] += f;
+                            resultCharSeqMap.put(charSequenceElement.getKey(), temp[0]+resultFloat);
+                        }else{                         
+                            float[] temp = {0};
+                            resultCharSeqMap.put(charSequenceElement.getKey(), temp[0]);
+                        }
+                    }else{
+                        HashMap<String,Float> resultcharSequenceMap = new HashMap<>();
+                        float[] temp = {0};
+                        resultcharSequenceMap.put(charSequenceElement.getKey(), temp[0]);
+                        result.put(langElement.getKey(), resultcharSequenceMap);
+                    }    
+                }
+            }
+        }
+        //fixa ett total    
+        return result;
     }
     
 

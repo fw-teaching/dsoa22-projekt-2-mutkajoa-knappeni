@@ -4,7 +4,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		System.out.println(Utils.getScore(Utils.getTrainData(), Utils.getInputData("Kalle skäller 1122 jag tycker om ost och öl")));
+		System.out.println(Utils.getScore(Utils.getTrainData(), Utils.getInputData("Während die finnischen Eisenerzlagerstätten fast erschöpft sind, finden sich noch bedeutende Vorkommen an Kupfer, Nickel, Zink und Chrom. In den 1860er Jahren folgte auf den Fund von Gold im Flusssand des Kemijoki ein regelrechter Goldrausch in Lappland. Bis heute wird an den Flüssen Lapplands teils durch Handwäsche, teils industriell Gold gewaschen, eine große Untertagemine befindet sich in Pahtavaara bei Sodankylä. Weitere, größtenteils noch unerschlossene Goldvorkommen sind über das gesamte Land verteilt, zuletzt wurde 1996 bei Kittilä eine auf Vorräte von 50 Tonnen Gold geschätzte Lagerstätte entdeckt. Außerdem ist Finnland der größte europäische Exporteur von Talk.[7] Dieses vor allem in der Papierindustrie benötigte Mineral wird derzeit in Sotkamo und Polvijärvi in großem Umfang abgebaut. Weitere in Finnland gewonnene Industrieminerale sind Wollastonit, Dolomit, Apatit, Quarz und Feldspat.")));
 		/*
 		Scanner scanner = new Scanner(System.in);
 

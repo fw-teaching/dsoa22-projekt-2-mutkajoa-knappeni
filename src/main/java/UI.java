@@ -1,4 +1,4 @@
-public class UI {
+/*public class UI {
 
     public void combineAndRank(String inputString) {
         var del1 = Utils.nogo(inputString);
@@ -8,3 +8,4 @@ public class UI {
     }
 
 }
+*/
