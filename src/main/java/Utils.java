@@ -1,6 +1,15 @@
+import java.security.spec.ECFieldF2m;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import javax.swing.InputMap;
 
@@ -114,7 +123,7 @@ public class Utils {
     * när vi plussar ihop frekvenserna
     */
     static HashMap<String,HashMap<String, Float>> getScore(ArrayList<HashMap<String, HashMap<String,Float>>> trainedData, HashMap<String, HashMap<String,Float>> inputtedData){
-        HashMap<String,HashMap<String, HashMap<String,Float>>> list = new HashMap<String,HashMap<String, HashMap<String,Float>>>();
+        HashMap<String,HashMap<String, LinkedHashMap<String,Float>>> list = new HashMap<String,HashMap<String, LinkedHashMap<String,Float>>>();
         HashMap<String,HashMap<String, Float>>result = new HashMap<String,HashMap<String, Float>>();
         String[] labelStrings = {"onechar","threechar","firstchar"};
         //här itererar vi över både trainedData och inputtedData samtidigt
@@ -127,18 +136,18 @@ public class Utils {
                         if(surr!=null){
                             //bygga upp resultatet "list"
                             if(list.containsKey(secondNestedHashMap.getKey())){
-                                HashMap<String,HashMap<String,Float>> kurr = list.get(secondNestedHashMap.getKey());
+                                HashMap<String,LinkedHashMap<String,Float>> kurr = list.get(secondNestedHashMap.getKey());
                                 HashMap<String,Float> hurr = kurr.get(labelStrings[trainedData.indexOf(firstNestedHashMap)]);
                                 if(hurr != null){
                                     hurr.put(charValue.getKey(), surr+charValue.getValue());
                             }else{
-                                HashMap<String,Float> turr = new HashMap<String,Float>();
+                                LinkedHashMap<String,Float> turr = new LinkedHashMap<String,Float>();
                                 turr.put(charValue.getKey(), surr+charValue.getValue());
                                 kurr.put(labelStrings[trainedData.indexOf(firstNestedHashMap)], turr);
                             }
                         }else{
-                            HashMap<String,HashMap<String,Float>> lurr = new HashMap<String,HashMap<String,Float>>();
-                            HashMap<String,Float> jurr = new HashMap<String,Float>();
+                            HashMap<String,LinkedHashMap<String,Float>> lurr = new HashMap<String,LinkedHashMap<String,Float>>();
+                            LinkedHashMap<String,Float> jurr = new LinkedHashMap<String,Float>();
                             jurr.put(charValue.getKey(), surr+charValue.getValue());
                             lurr.put(labelStrings[trainedData.indexOf(firstNestedHashMap)], jurr);
                             list.put(secondNestedHashMap.getKey(), lurr);
@@ -147,32 +156,42 @@ public class Utils {
                 }
             }
         }
-        //Räkna ut resultatet och sortera enligt högsta score till lägsta
-        for (Entry<String,HashMap<String,HashMap<String,Float>>> langElement : list.entrySet()) {
-            for (Entry<String,HashMap<String,Float>> charSequenceElement : langElement.getValue().entrySet()) {
+        //Räkna ut resultatet för varje språk
+        for (Entry<String,HashMap<String,LinkedHashMap<String,Float>>> langElement : list.entrySet()) {
+            for (Entry<String,LinkedHashMap<String,Float>> charSequenceElement : langElement.getValue().entrySet()) {
                 for (Entry<String,Float> valueElements : charSequenceElement.getValue().entrySet()) {
                     if(result.containsKey(langElement.getKey())){
                         HashMap<String,Float> resultCharSeqMap = result.get(langElement.getKey());
                         Float resultFloat = valueElements.getValue();
                         if(resultCharSeqMap.containsKey(charSequenceElement.getKey())){
-                            float temp[] = {0};
+                            Float temp = 0.0f;
                             Float f = resultCharSeqMap.get(charSequenceElement.getKey());
-                                temp[0] += f;
-                            resultCharSeqMap.put(charSequenceElement.getKey(), temp[0]+resultFloat);
+                                temp += f;
+                            resultCharSeqMap.put(charSequenceElement.getKey(), temp+resultFloat);
                         }else{                         
-                            float[] temp = {0};
-                            resultCharSeqMap.put(charSequenceElement.getKey(), temp[0]);
+                            Float temp = 0.0f;
+                            resultCharSeqMap.put(charSequenceElement.getKey(), temp);
                         }
                     }else{
-                        HashMap<String,Float> resultcharSequenceMap = new HashMap<>();
-                        float[] temp = {0};
-                        resultcharSequenceMap.put(charSequenceElement.getKey(), temp[0]);
+                        LinkedHashMap<String,Float> resultcharSequenceMap = new LinkedHashMap<>();
+                        Float temp = 0.0f;
+                        resultcharSequenceMap.put(charSequenceElement.getKey(), temp);
                         result.put(langElement.getKey(), resultcharSequenceMap);
                     }    
                 }
             }
         }
-        //fixa ett total    
+        //fixa en total
+        for (Entry<String,HashMap<String,Float>> langEntry : result.entrySet()) {
+            Float vFloat = 0.0f;
+            for (Entry<String,Float> value : langEntry.getValue().entrySet()) {
+                 vFloat += value.getValue();
+            }
+            HashMap<String,Float> values = result.get(langEntry.getKey());
+            values.put("total", vFloat);
+        }
+     
+
         return result;
     }
     
