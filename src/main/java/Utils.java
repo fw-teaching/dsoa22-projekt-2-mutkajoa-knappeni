@@ -205,23 +205,40 @@ public class Utils {
         return result;
     }
 
-    static TreeMap<Float, String> totalScore(HashMap<String, HashMap<String, Float>> result) {
-        TreeMap<Float, String> surr = new TreeMap<>();
-        TreeMap<Float, String> purr = new TreeMap<>();
-        TreeMap<Float, String> murr = new TreeMap<>();
-        TreeMap<Float, String> kurr = new TreeMap<>();
+    static String totalScore(HashMap<String, HashMap<String, Float>> result) {
+        String tableString = "Språk     Analys 1      Analys 2     Analys 3      Kombinerat     Rangdordning\n";
+        TreeMap<String, Float> oneCharAnalysis = new TreeMap<>();
+        TreeMap<String, Float> threeCharAnalysis = new TreeMap<>();
+        TreeMap<String, Float> firstCharAnalysis = new TreeMap<>();
+        TreeMap<String, Float> totalAnalysis = new TreeMap<>();
+        TreeMap<String, Integer> rankMap = new TreeMap<>();
 
         for (LangLabel label : LangLabel.values()) {
-            surr.put(result.get(label.getName()).get("total"), label.getName());
-            purr.put(result.get(label.getName()).get("onechar"), label.getName());
-            murr.put(result.get(label.getName()).get("threechar"), label.getName());
-            kurr.put(result.get(label.getName()).get("firstchar"), label.getName());
+            // oneCharAnalysis.put(result.get(label.getName()).get("onechar"),
+            // label.getName());
+            // threeCharAnalysis.put(result.get(label.getName()).get("threechar"),
+            // label.getName());
+            // firstCharAnalysis.put(result.get(label.getName()).get("firstchar"),
+            // label.getName());
+            // totalAnalysis.put(result.get(label.getName()).get("total"), label.getName());
+            // rankMap.put(result.get(label.getName()).get("total"), label.getName());
+
+            oneCharAnalysis.put(label.getName(), result.get(label.getName()).get("onechar"));
+            threeCharAnalysis.put(label.getName(), result.get(label.getName()).get("threechar"));
+            firstCharAnalysis.put(label.getName(), result.get(label.getName()).get("firstchar"));
+            totalAnalysis.put(label.getName(), result.get(label.getName()).get("total"));
+            rankMap.put(label.getName(), 0);
         }
-        System.out.println(surr);
-        System.out.println(purr);
-        System.out.println(murr);
-        System.out.println(kurr);
-        return surr;
+        for (LangLabel label : LangLabel.values()) {
+            tableString = tableString
+                    .concat(label.toString() + "        " + oneCharAnalysis.get(label.getName()).toString() + "     "
+                            + threeCharAnalysis.get(label.getName()).toString() + "     "
+                            + firstCharAnalysis.get(label.getName()).toString() + "     "
+                            + totalAnalysis.get(label.getName()).toString()
+                            + "\n");
+        }
+
+        return tableString;
     }
 
 }
