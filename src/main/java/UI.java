@@ -1,11 +1,9 @@
-/*public class UI {
+public class UI {
 
-    public void combineAndRank(String inputString) {
-        var del1 = Utils.nogo(inputString);
-        var del2 = Utils.nogo(inputString);
-        var del3 = Utils.nogo(inputString);
-
+    public static void printTable(String input) {
+        var table = Utils.getScore(Utils.getTrainData(), Utils.getInputData(
+                "staf Emil Mannerheim, maréchal de Finlande."))
+                .get("svenska").get("total");
+        System.out.println(table);
     }
-
 }
-*/
