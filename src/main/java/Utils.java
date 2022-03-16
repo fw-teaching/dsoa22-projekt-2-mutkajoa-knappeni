@@ -205,7 +205,7 @@ public class Utils {
         return result;
     }
 
-    static void totalScore(HashMap<String, HashMap<String, Float>> result) {
+    static TreeMap<Float, String> totalScore(HashMap<String, HashMap<String, Float>> result) {
         TreeMap<Float, String> surr = new TreeMap<>();
         TreeMap<Float, String> purr = new TreeMap<>();
         TreeMap<Float, String> murr = new TreeMap<>();
@@ -221,5 +221,7 @@ public class Utils {
         System.out.println(purr);
         System.out.println(murr);
         System.out.println(kurr);
+        return surr;
     }
+
 }
