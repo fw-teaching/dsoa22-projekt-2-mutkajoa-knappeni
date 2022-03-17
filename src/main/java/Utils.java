@@ -99,12 +99,13 @@ public class Utils {
         HashMap<String, HashMap<String, Float>> threeCharMap = new HashMap<String, HashMap<String, Float>>();
         HashMap<String, HashMap<String, Float>> firstCharMap = new HashMap<String, HashMap<String, Float>>();
         for (LangLabel label : LangLabel.values()) {
+            String fileString = FileHandler.readTextFile("assets/lang-samples/" + label + ".txt");
             oneCharMap.put(label.getName(),
-                    getPrecentage(getCharFrequency(FileHandler.readTextFile("assets/lang-samples/" + label + ".txt"))));
+                    getPrecentage(getCharFrequency(fileString)));
             threeCharMap.put(label.getName(), getPrecentage(
-                    getThreeCharFrequency(FileHandler.readTextFile("assets/lang-samples/" + label + ".txt"))));
+                    getThreeCharFrequency(fileString)));
             firstCharMap.put(label.getName(), getPrecentage(
-                    getFirstCharFrequency(FileHandler.readTextFile("assets/lang-samples/" + label + ".txt"))));
+                    getFirstCharFrequency(fileString)));
         }
         map.add(oneCharMap);
         map.add(threeCharMap);
