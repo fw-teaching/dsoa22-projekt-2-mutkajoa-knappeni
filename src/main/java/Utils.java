@@ -211,28 +211,19 @@ public class Utils {
         TreeMap<String, Float> threeCharAnalysis = new TreeMap<>();
         TreeMap<String, Float> firstCharAnalysis = new TreeMap<>();
         TreeMap<String, Float> totalAnalysis = new TreeMap<>();
-        TreeMap<String, Float> tempTotalAnalysis = new TreeMap<>();
+        TreeMap<Float, String> tempTotalAnalysis = new TreeMap<>();
         TreeMap<String, Integer> rankMap = new TreeMap<>();
 
         for (LangLabel label : LangLabel.values()) {
-            // oneCharAnalysis.put(result.get(label.getName()).get("onechar"),
-            // label.getName());
-            // threeCharAnalysis.put(result.get(label.getName()).get("threechar"),
-            // label.getName());
-            // firstCharAnalysis.put(result.get(label.getName()).get("firstchar"),
-            // label.getName());
-            // totalAnalysis.put(result.get(label.getName()).get("total"), label.getName());
-            // rankMap.put(result.get(label.getName()).get("total"), label.getName());
-
             oneCharAnalysis.put(label.getName(), result.get(label.getName()).get("onechar"));
             threeCharAnalysis.put(label.getName(), result.get(label.getName()).get("threechar"));
             firstCharAnalysis.put(label.getName(), result.get(label.getName()).get("firstchar"));
             totalAnalysis.put(label.getName(), result.get(label.getName()).get("total"));
-            tempTotalAnalysis.put(label.getName(), result.get(label.getName()).get("total"));
+            tempTotalAnalysis.put(result.get(label.getName()).get("total"), label.getName());
         }
 
         for (int i = 0; i < totalAnalysis.size(); i++) {
-            rankMap.put(tempTotalAnalysis.pollFirstEntry().getKey(), i + 1);
+            rankMap.put(tempTotalAnalysis.pollLastEntry().getValue(), i + 1);
         }
         System.out.println(rankMap + "------");
         for (LangLabel label : LangLabel.values()) {
