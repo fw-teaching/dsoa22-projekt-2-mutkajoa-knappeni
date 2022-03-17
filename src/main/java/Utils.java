@@ -212,7 +212,7 @@ public class Utils {
         TreeMap<String, Float> firstCharAnalysis = new TreeMap<>();
         TreeMap<String, Float> totalAnalysis = new TreeMap<>();
         TreeMap<Float, String> tempTotalAnalysis = new TreeMap<>();
-        TreeMap<String, Integer> rankMap = new TreeMap<>();
+        TreeMap<Integer, String> rankMap = new TreeMap<>();
 
         for (LangLabel label : LangLabel.values()) {
             oneCharAnalysis.put(label.getName(), result.get(label.getName()).get("onechar"));
@@ -223,7 +223,7 @@ public class Utils {
         }
 
         for (int i = 0; i < totalAnalysis.size(); i++) {
-            rankMap.put(tempTotalAnalysis.pollLastEntry().getValue(), i + 1);
+            rankMap.put(i + 1, tempTotalAnalysis.pollLastEntry().getValue());
         }
         System.out.println(rankMap + "------");
         for (LangLabel label : LangLabel.values()) {
