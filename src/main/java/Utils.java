@@ -228,12 +228,11 @@ public class Utils {
             threeCharAnalysis.put(label.getName(), result.get(label.getName()).get("threechar"));
             firstCharAnalysis.put(label.getName(), result.get(label.getName()).get("firstchar"));
             totalAnalysis.put(label.getName(), result.get(label.getName()).get("total"));
+            tempTotalAnalysis.put(label.getName(), result.get(label.getName()).get("total"));
         }
-        tempTotalAnalysis = totalAnalysis;
-        System.out.println(totalAnalysis.size());
+
         for (int i = 0; i < totalAnalysis.size(); i++) {
             rankMap.put(tempTotalAnalysis.pollFirstEntry().getKey(), i + 1);
-            System.out.println(tempTotalAnalysis);
         }
         System.out.println(rankMap + "------");
         for (LangLabel label : LangLabel.values()) {
