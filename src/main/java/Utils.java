@@ -1,4 +1,5 @@
 import java.security.spec.ECFieldF2m;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -207,13 +208,14 @@ public class Utils {
     }
 
     static String totalScore(HashMap<String, HashMap<String, Float>> result) {
-        String tableString = "Språk     Analys 1      Analys 2     Analys 3      Kombinerat     Rangdordning\n";
+        String tableString = "Språk  Analys 1  Analys 2  Analys 3  Kombinerat  Rangdordning\n";
         TreeMap<String, Float> oneCharAnalysis = new TreeMap<>();
         TreeMap<String, Float> threeCharAnalysis = new TreeMap<>();
         TreeMap<String, Float> firstCharAnalysis = new TreeMap<>();
         TreeMap<String, Float> totalAnalysis = new TreeMap<>();
         TreeMap<Float, String> tempTotalAnalysis = new TreeMap<>();
         TreeMap<Integer, String> rankMap = new TreeMap<>();
+        TreeMap<String, String> languageMap = new TreeMap<>();
 
         for (LangLabel label : LangLabel.values()) {
             oneCharAnalysis.put(label.getName(), result.get(label.getName()).get("onechar"));
@@ -221,21 +223,21 @@ public class Utils {
             firstCharAnalysis.put(label.getName(), result.get(label.getName()).get("firstchar"));
             totalAnalysis.put(label.getName(), result.get(label.getName()).get("total"));
             tempTotalAnalysis.put(result.get(label.getName()).get("total"), label.getName());
+            languageMap.put(label.getName(), label.toString());
         }
 
-        for (int i = 0; i < totalAnalysis.size(); i++) {
-            rankMap.put(i + 1, tempTotalAnalysis.pollLastEntry().getValue());
-        }
-        System.out.println(rankMap + "------");
-        for (LangLabel label : LangLabel.values()) {
+        for (int i = 1; i < totalAnalysis.size() + 1; i++) {
+            DecimalFormat df = new DecimalFormat("#.##");
+            String lastEntry = tempTotalAnalysis.pollLastEntry().getValue();
+            rankMap.put(i, lastEntry);
             tableString = tableString
-                    .concat(label.toString() + "        " + oneCharAnalysis.get(label.getName()).toString() + "     "
-                            + threeCharAnalysis.get(label.getName()).toString() + "     "
-                            + firstCharAnalysis.get(label.getName()).toString() + "     "
-                            + totalAnalysis.get(label.getName()).toString()
-                            + "\n");
+                    .concat(languageMap.get(lastEntry) + "     "
+                            + Float.valueOf(df.format(oneCharAnalysis.get(lastEntry))) + "      "
+                            + Float.valueOf(df.format(threeCharAnalysis.get(lastEntry))) + "      "
+                            + Float.valueOf(df.format(firstCharAnalysis.get(lastEntry))) + "      "
+                            + Float.valueOf(df.format(totalAnalysis.get(lastEntry)))
+                            + "        " + i + "\n");
         }
-
         return tableString;
     }
 
