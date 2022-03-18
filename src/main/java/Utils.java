@@ -1,18 +1,9 @@
-import java.security.spec.ECFieldF2m;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
-import javax.swing.InputMap;
 
 public class Utils {
 
@@ -207,8 +198,11 @@ public class Utils {
         return result;
     }
 
-    static String totalScore(HashMap<String, HashMap<String, Float>> result) {
-        String tableString = "Språk  Analys 1  Analys 2  Analys 3  Kombinerat  Rangdordning\n";
+    // Rankar allt och lägger i string
+    // Kanske lite onödiga TreeMaps men de funkar
+    static String[] totalScore(HashMap<String, HashMap<String, Float>> result) {
+        String[] returnedStrings = new String[2];
+        String tableString = "Språk  Analys 1  Analys 2  Analys 3  Kombinerat  Rangordning\n";
         TreeMap<String, Float> oneCharAnalysis = new TreeMap<>();
         TreeMap<String, Float> threeCharAnalysis = new TreeMap<>();
         TreeMap<String, Float> firstCharAnalysis = new TreeMap<>();
@@ -225,20 +219,23 @@ public class Utils {
             tempTotalAnalysis.put(result.get(label.getName()).get("total"), label.getName());
             languageMap.put(label.getName(), label.toString());
         }
-
+        // Här lägger vi allt in i en stor string som vi printtar som fin table
         for (int i = 1; i < totalAnalysis.size() + 1; i++) {
-            DecimalFormat df = new DecimalFormat("#.##");
             String lastEntry = tempTotalAnalysis.pollLastEntry().getValue();
             rankMap.put(i, lastEntry);
             tableString = tableString
                     .concat(languageMap.get(lastEntry) + "     "
-                            + Float.valueOf(df.format(oneCharAnalysis.get(lastEntry))) + "      "
-                            + Float.valueOf(df.format(threeCharAnalysis.get(lastEntry))) + "      "
-                            + Float.valueOf(df.format(firstCharAnalysis.get(lastEntry))) + "      "
-                            + Float.valueOf(df.format(totalAnalysis.get(lastEntry)))
+                            + String.format("%.2f", oneCharAnalysis.get(lastEntry)) + "      "
+                            + String.format("%.2f", threeCharAnalysis.get(lastEntry)) +
+                            "      "
+                            + String.format("%.2f", firstCharAnalysis.get(lastEntry)) +
+                            "      "
+                            + String.format("%.2f", totalAnalysis.get(lastEntry))
                             + "        " + i + "\n");
         }
-        return tableString;
+        returnedStrings[0] = tableString;
+        returnedStrings[1] = rankMap.get(1);
+        return returnedStrings;
     }
 
 }
